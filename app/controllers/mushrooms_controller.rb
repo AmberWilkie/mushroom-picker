@@ -2,13 +2,13 @@ class MushroomsController < ApplicationController
   before_action :get_headers, :get_mushrooms
 
   def index
-    render :index, locals: { mushrooms: @mushrooms, garbage: 'dammit' }
+    render :index, locals: { mushrooms: @mushrooms }
   end
 
   def search
     cap_shapes = params['cap-shape'].select { |_key, value| value == '1' }.keys
     @mushrooms = Mushroom.where(cap_shape: cap_shapes)
-    render :index, locals: { mushrooms: @mushrooms, garbage: 'so much garbage' }
+    render :index, locals: { mushrooms: @mushrooms }
   end
 
   private
