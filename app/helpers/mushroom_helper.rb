@@ -1,28 +1,28 @@
 module MushroomHelper
   ATTRIBUTES = %w[
-  cap-shape
-  cap-surface
-  cap-color
-  bruises?
-  odor
-  gill-attachment
-  gill-spacing
-  gill-size
-  gill-color
-  stalk-shape
-  stalk-root
-  stalk-surface-above-ring
-  stalk-surface-below-ring
-  stalk-color-above-ring
-  stalk-color-below-ring
-  veil-type
-  veil-color
-  ring-number
-  ring-type
-  spore-print-color
-  population
-  habitat
-  ]
+    cap-shape
+    cap-surface
+    cap-color
+    bruises?
+    odor
+    gill-attachment
+    gill-spacing
+    gill-size
+    gill-color
+    stalk-shape
+    stalk-root
+    stalk-surface-above-ring
+    stalk-surface-below-ring
+    stalk-color-above-ring
+    stalk-color-below-ring
+    veil-type
+    veil-color
+    ring-number
+    ring-type
+    spore-print-color
+    population
+    habitat
+  ].freeze
 
   ATTRIBUTE_MAPPING = "0. edible: edible=e',
   1. cap-shape: bell=b,conical=c,convex=x,flat=f, knobbed=k,sunken=s
@@ -49,23 +49,23 @@ module MushroomHelper
 22. habitat: grasses=g,leaves=l,meadows=m,paths=p, urban=u,waste=w,woods=d"
 
   def self.mushrooms
-    response = Rails.cache.fetch('mushrooms', expires_in: 1.hour) do
-      HTTParty
-        .get('https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data').body.to_json
-    end
-    CSV.parse(JSON.parse(response))
+    Mushroom.all
   end
 
   def self.mushroom_attributes
     ATTRIBUTE_MAPPING.split(/\n/).map do |attr_string|
-      header, codes = attr_string.tr("0-9", "").tr('. ', '').split(':')
+      header, codes = attr_string.tr('0-9', '').tr('. ', '').split(':')
       codes = codes.split(',')
       code_hash = {}
       codes.each do |code|
         sym, letter = code.split('=')
         code_hash[letter] = sym
       end
-      {header: header, codes: code_hash}
+      { header: header, codes: code_hash }
     end
+  end
+
+  def self.mushroom_value(mushroom, header)
+    mushroom[header[:header].gsub('-', '_').gsub('?', '')]
   end
 end

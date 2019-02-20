@@ -1,13 +1,14 @@
-<table style="width:200%;">
+<h1><%= garbage %></h1>
+<table>
   <thead>
   <tr>
-    <% MushroomHelper.mushroom_attributes.each do |attr| %>
+    <% @headers.each do |attr| %>
       <th><%= attr[:header] %></th>
     <% end %>
   </tr>
   <tr>
-    <%= form_tag search_mushrooms_path, method: :post, remote: true do %>
-      <% MushroomHelper.mushroom_attributes.each do |attr| %>
+    <%= form_tag search_mushrooms_path, method: :post do %>
+      <% @headers.each do |attr| %>
         <th>
           <% attr[:codes].each do |code| %>
             <%= code[1] %>
@@ -21,12 +22,12 @@
   </thead>
   <tbody>
   <tr>
-    Total mushrooms for query: <%= @mushrooms.size %>
+    <h3>Total mushrooms for query: <%= mushrooms.size %></h3>
   </tr>
-  <% @mushrooms.first(100).each do |mushroom| %>
+  <% mushrooms.first(100).each do |mushroom| %>
     <tr>
-      <% mushroom.each_with_index do |attr, i| %>
-        <td><%= MushroomHelper.mushroom_attributes[i][:codes][attr] %></td>
+      <% @headers.each do |header| %>
+        <td><%= MushroomHelper.mushroom_value(mushroom, header) %></td>
       <% end %>
     </tr>
   <% end %>
